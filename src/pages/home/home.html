@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar color="danger">
     <ion-item>
-    <ion-input type="text" placeholder="Search" [(ngModel)]="searchbar"></ion-input>
+    <ion-input  type="text" placeholder="Search" [(ngModel)]="searchbar"></ion-input>
     </ion-item>
     <ion-buttons end>
       <button ion-button icon-only (click)="getItems(searchbar)">
@@ -27,9 +27,16 @@
       <img src="{{img.webformatURL}}">
 <ion-grid>
   <ion-row>
-      <ion-col col-8>
+      <ion-col col-4 padding>
       <div><ion-icon ios="ios-eye" md="md-eye"></ion-icon>{{img.views}}</div></ion-col>
-     <ion-col col-3> <button ion-button icon-only color="dark" (click)="downloadImage(img.webformatURL)" end><ion-icon ios="ios-download" md="md-download" end></ion-icon></button>
+     <ion-col col-4> <button ion-button icon-only color="dark" (click)="downloadImage(img.webformatURL)" clear end><ion-icon ios="ios-download" md="md-download" end></ion-icon></button>
+     </ion-col>
+     <ion-col col-4>
+
+        <button ion-button icon-only (click)="shareItem('i like it',img.webformatURL)" color="primary" clear>
+            <ion-icon class="share-icon" name="share"></ion-icon>
+          </button>
+    
      </ion-col>
     </ion-row>
     </ion-grid>

@@ -1,18 +1,48 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
+import { Storage } from '@ionic/storage';
 
-/*
-  Generated class for the DatabaseProvider provider.
 
-  See https://angular.io/docs/ts/latest/guide/dependency-injection.html
-  for more info on providers and Angular DI.
-*/
 @Injectable()
 export class DatabaseProvider {
-
-  constructor(public http: Http) {
-    console.log('Hello DatabaseProvider Provider');
+links = [];
+  constructor(public storage: Storage) {
   }
+
+  getdata() {
+
+    this.storage.get('links').then((data)=>{
+      if(data !== null) {
+   this.links = JSON.parse(data);
+      }
+    });
+
+  }
+
+  insertdata(data) {
+    
+    this.storage.get('links').then((res)=>{
+      if(res !== null) {
+       
+        
+          this.links = JSON.parse(res);
+           
+          console.log(this.links);
+          this.links.push({
+            link:data
+          });
+        
+       this.storage.set('links',JSON.stringify(this.links));
+
+      }else{
+        this.links.push({
+          link:data
+        });
+        this.storage.set('links',JSON.stringify(this.links));
+      }
+    });
+  }
+
+
 
 }

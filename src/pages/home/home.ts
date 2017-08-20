@@ -6,6 +6,9 @@ import {File} from '@ionic-native/file';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer';
 import { LoaderProvider } from '../../providers/loader/loader';
 import { DatabaseProvider } from '../../providers/database/database';
+import { WifiProvider } from '../../providers/wifi/wifi';
+import { ShareProvider } from '../../providers/share/share';
+
 declare var cordova: any;
 
 
@@ -13,7 +16,7 @@ declare var cordova: any;
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html',
-  providers:[FileTransfer,File]
+  providers:[FileTransfer,File,ShareProvider]
 })
 export class HomePage {
   searchbar = "";
@@ -21,13 +24,25 @@ export class HomePage {
   storageDirectory: string = '';
   welcome = "search images good luck!";
   constructor(public navCtrl: NavController,
-    private storage: Storage,
               public http:Http,
-              public loader:LoaderProvider,public platform: Platform,
-               public transfer: FileTransfer, 
-                public alertCtrl: AlertController,public file:File,public database:DatabaseProvider) {
+              public loader:LoaderProvider,
+              public platform: Platform,
+              public transfer: FileTransfer, 
+              public alertCtrl: AlertController,
+              public file:File,
+              public database:DatabaseProvider,
+              public Wifi:WifiProvider,
+              public ShareProvider:ShareProvider
+ 
+            ) {
 
                   this.platform.ready().then(() => {
+
+
+
+                          this.database.getdata();
+                          
+
                     // make sure this is on a device, not an emulation (e.g. chrome tools device mode)
                     if(!this.platform.is('cordova')) {
                       return false;
@@ -60,7 +75,6 @@ this.http.get('https://pixabay.com/api/?key=6211753-0724a2e2b63705c4a7d06dadb&q=
   this.imgs = res.hits;
   this.loader.disLoading();
 });
-   console.log(val);
    this.searchbar = "";
    
   }
@@ -68,19 +82,21 @@ this.http.get('https://pixabay.com/api/?key=6211753-0724a2e2b63705c4a7d06dadb&q=
 links = [];
 
 
-
+shareItem(title,img) {
+  this.ShareProvider.shareto(title,img);
+}
 
   downloadImage(image) {
-    
+     
     
         this.platform.ready().then(() => {
-    
+          this.database.insertdata(image);
           const fileTransfer: FileTransferObject = this.transfer.create();
     
           const imageLocation = image;
           const imagename = image.substring(24,image.lentgh);
+         
           fileTransfer.download(imageLocation, this.file.externalRootDirectory+'Pictures/imagesearcher/' + imagename).then((entry) => {
-    console.log(entry);
             const alertSuccess = this.alertCtrl.create({
               title: `Download Succeeded!`,
               subTitle: `${image} was successfully downloaded`,

@@ -1,14 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { DatabaseProvider } from '../../providers/database/database';
+import 'rxjs/add/operator/map';
 
-import { Storage } from '@ionic/storage';
-
-/**
- * Generated class for the DownloadsPage page.
- *
- * See http://ionicframework.com/docs/components/#navigation for more info
- * on Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({
@@ -16,15 +10,17 @@ import { Storage } from '@ionic/storage';
   templateUrl: 'downloads.html',
 })
 export class DownloadsPage {
-
-  constructor(public navCtrl: NavController, public navParams: NavParams,public storage:Storage) {
+  lists = [];
   
-  this.storage.get('links').then((val) => {
-  console.log(val);
-  });
-  }
 
- d_imgs = [];  
+  constructor(public navCtrl: NavController, public navParams: NavParams,public database:DatabaseProvider) {
+    this.database.getdata();
+  this.lists = database.links.reverse();
+  
+  }
+  
+
+ 
 
 
 
